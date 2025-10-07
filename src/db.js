@@ -5,9 +5,13 @@ export const pool = new pg.Pool({
     host: "localhost",
     user: "postgres",
     password: "admin",
-    database: "PERN",
+    database: "test_bd",
 });
 
 pool.on("connect", () => {
     console.log("Conectado a la base de datos");
+});
+
+pool.on("error", (err) => {
+    console.error("Error en la conexión a la base de datos:", err.message);
 });
