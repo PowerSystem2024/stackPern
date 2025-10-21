@@ -7,12 +7,12 @@ const router = Router();
 
 router.get("/tareas", isAuth ,listTareas);
 
-router.get("/tareas/:id", listTarea);
+router.get("/tareas/:id",isAuth, listTarea);
 
-router.post("/tareas", crearTarea);
+router.post("/tareas",isAuth, crearTarea);
 
-router.put("/tareas/:id", actualizarTarea);
+router.put("/tareas/:id",isAuth, actualizarTarea);
 
-router.delete("/tareas/:id", eliminarTarea);
+router.delete("/tareas/:id",isAuth, eliminarTarea);
 
 export default router;
