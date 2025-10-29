@@ -1,9 +1,9 @@
 import { pool } from "../db.js";
 
 export const listTareas =  async (req, res) => {
-    const resultado = await pool.query("SELECT * FROM tareas");
-    console.log(resultado);
-    return res.json(resultado);
+    console.log(req.usuarioId);
+    const resultado = await pool.query("SELECT * FROM tareas WHERE usuario_id = $1", [req.usuarioId]);
+    return res.json(resultado.rows);
 }
 
 export const listTarea = async(req, res) => {
@@ -21,8 +21,8 @@ export const crearTarea = async (req, res, next) => {
 
     try {
         const result = await pool.query(
-            'INSERT INTO tareas (titulo, descripcion) VALUES ($1, $2) RETURNING *',
-            [titulo, descripcion]
+            'INSERT INTO tareas (titulo, descripcion, usuario_id ) VALUES ($1, $2, $3) RETURNING *',
+            [titulo, descripcion, req.usuarioId]
         );
         console.log(result);
         res.json(result.rows[0]);
@@ -39,19 +39,19 @@ export const crearTarea = async (req, res, next) => {
 export const actualizarTarea = async (req, res) => {
     const { titulo, descripcion } = req.body;
     const id = req.params.id;
-    const resultado = pool.query("UPDATE tareas SET titulo = $1, descripcion = $2 WHERE id = $3 RETURNING *", [titulo, descripcion, id]);
+    const resultado = await pool.query("UPDATE tareas SET titulo = $1, descripcion = $2 WHERE id = $3 RETURNING *", [titulo, descripcion, id]);
 
     if (resultado.rowCount === 0) {
         return res.status(404).json({
             message: "No existe una tarea con ese id"
         });
-}
-return res.json(result.rows[0]);
+    }
+    return res.json(resultado.rows[0]);
 }
 
 
-export const eliminarTarea = (req, res) => {
-    const resultado = pool.query("DELETE FROM tareas WHERE id = $1", [req.params.id]);
+export const eliminarTarea = async (req, res) => {
+    const resultado = await pool.query("DELETE FROM tareas WHERE id = $1", [req.params.id]);
     console.log(resultado);
 
     if (resultado.rowCount === 0) {
@@ -60,5 +60,5 @@ export const eliminarTarea = (req, res) => {
         });
     }
 
- return res.sendStatus(204);
+    return res.sendStatus(204);
 }
