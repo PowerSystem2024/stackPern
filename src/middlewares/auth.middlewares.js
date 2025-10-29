@@ -1,7 +1,14 @@
-import  jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 export const isAuth = (req, res, next) => {
-    const  token  = req.cookies.token;
+    let token = req.cookies.token;
+    if (!token) {
+        const authHeader = req.get('Authorization');
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            token = authHeader.substring(7);
+        }
+    }
+
     if (!token) {
         return res.status(401).json({ 
             message: "No estas autorizado" 
@@ -16,7 +23,5 @@ export const isAuth = (req, res, next) => {
         }
         req.usuarioId = decoded.id;
         next();
-        });
-    };
- 
-
+    });
+};
