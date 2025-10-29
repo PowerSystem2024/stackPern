@@ -1,10 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
+import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import TareasPage from './pages/TareasPage';
 import TareaFormPage from './pages/TareaFormPage';
+
 function App() {
   return (
     <Routes>
